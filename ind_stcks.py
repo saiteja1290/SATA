@@ -18,7 +18,7 @@ def strtoflt(str):
 def buy(code):
     notification.notify(
         title='Notification',
-        message='Possible Sell Signal , Please Check The Stock  - {0}'.format(
+        message='Possible Buy Signal , Please Check The Stock  - {0}'.format(
             code),
         app_icon=None,
         timeout=10,
@@ -81,43 +81,14 @@ def rsi(code):
             if(count2 == 2):
                 break
     return strtoflt(l[1])
-def golden_strat(code):
-    a = movingaverage(code, 20)
-    b = movingaverage(code, 50)
-    if(a > b):
-        if(round(movingaverage(code, 20)) == round(movingaverage(code, 50))):
-            sell(code)
-    else:
-        if(round(movingaverage(code, 20), -1) == round(movingaverage(code, 50), -1)):
-            buy(code)
-def strat_2(code):
-    a = movingaverage(code, 5)
-    b = movingaverage(code, 20)
-    if(a > b):
-        if(round(movingaverage(code, 5)) == round(movingaverage(code, 20))):
-            sell(code)
-    else:
-        if(round(movingaverage(code, 5), -1) == round(movingaverage(code, 20), -1)):
-            buy(code)
-            
-def rsistart(code):
-    if(rsi(code) <= 35):
-        buy(code)
-    if(rsi(code) >= 65):
-        sell(code)
-
-def main():
-    while(True):
-        golden_strat('reliance-industries')
-        golden_strat('tata-consultancy-services')
-        golden_strat('hdfc-bank-ltd')
-        golden_strat('infosys')
-        golden_strat('hindustan-unilever')
-        golden_strat('icici-bank-ltd')
-        golden_strat('state-bank-of-india')
-        golden_strat('housing-development-finance')
-        golden_strat('bharti0-airtel')
-        golden_strat('itc')
-        # strat_2('infosys')
-        sleep(10)
-main()
+def strat1(code):
+    ma50 = movingaverage(code,50)
+    ma20 = movingaverage(code,20)
+    ma5 = movingaverage(code,5)
+    if(ma50 < stockprice(code)):
+        if(ma5 < ma20):
+            if(round(ma5,-1) == round(ma20,-1)):
+                buy(code)
+        elif(ma20 < ma5):
+            if(round(ma5,-1) == round(ma20,-1)):
+                sell(code)
