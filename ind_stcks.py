@@ -15,10 +15,10 @@ def strtoflt(str):
         else:
             newstr += str[i]
     return float(newstr)
-def buy(code):
+def alert(code):
     notification.notify(
         title='Notification',
-        message='Possible Buy Signal , Please Check The Stock  - {0}'.format(
+        message='alert Signal , Please Check The Stock  - {0}'.format(
             code),
         app_icon=None,
         timeout=10,
@@ -37,9 +37,9 @@ def stockprice(code):
     r = requests.get(url)
 
     stockpricelol = BeautifulSoup(r.text, 'html5lib')
-    stockpricelol = stockpricelol.find('div', {'class': 'last u-up'})
-    stockpricelol = stockpricelol.find('bdo').text
-    stockpricelist.append(strtoflt(stockpricelol))
+    stockpricelol = stockpricelol.find('bdo', {'class': 'last-price-value js-streamable-element'}).text
+    # stockpricelol = stockpricelol.find('bdo').text
+    # stockpricelist.append(strtoflt(stockpricelol))
 
     return strtoflt(stockpricelol)
 def movingaverage(code, lenght):
@@ -85,10 +85,37 @@ def strat1(code):
     ma50 = movingaverage(code,50)
     ma20 = movingaverage(code,20)
     ma5 = movingaverage(code,5)
-    if(ma50 < stockprice(code)):
-        if(ma5 < ma20):
+    stk = stockprice(code)
+    if(stk>ma50):
+        if(len(str(stk))==3):
+            if(round(ma5) == round(ma20)):
+                alert(code)
+        elif(len(str(stk)) == 4):
             if(round(ma5,-1) == round(ma20,-1)):
-                buy(code)
-        elif(ma20 < ma5):
-            if(round(ma5,-1) == round(ma20,-1)):
-                sell(code)
+                alert(code)
+def main():
+    while(True):
+        strat1('state-bank-of-india')
+        strat1('reliance-industries')
+        strat1('hdfc-bank-ltd')
+        strat1('icici-bank-ltd')
+        strat1('tata-steel')
+        strat1('infosys')
+        strat1('bank-of-baroda')
+        strat1('axis-bank')
+        strat1('kotak-mahindra-bank')
+        strat1('hindustan-unilever')
+        strat1('hindalco-industries')
+        strat1('indian-oil-corporation')
+        strat1('wipro-ltd')
+        strat1('tata-motors-ltd')
+        strat1('itc')
+        strat1('coal-india')
+        strat1('bharat-heavy-electricals')
+        strat1('the-federal-bank')
+        strat1('bharti-airtel')
+        strat1('adani-enterprises')
+        strat1('adani-power')
+main()
+# print(stockprice('reliance-industries'))   
+# print(type(stockprice('reliance-industries')))
